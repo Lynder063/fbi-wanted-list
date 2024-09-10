@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FBI Wanted Persons Viewer
 
-## Getting Started
+## Overview
 
-First, run the development server:
+The FBI Wanted Persons Viewer is a web application that displays information about individuals currently on the FBI's wanted list. This application provides an interactive interface for users to browse through wanted persons, search for specific individuals, and view detailed information about each person.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Display a grid of FBI wanted persons with their images and basic information
+- Real-time search functionality to filter wanted persons by name
+- Responsive design for optimal viewing on various devices
+- Pagination for easy navigation through the list of wanted persons
+- Detailed view of each wanted person, including age, race, height, weight, and crime information
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Technologies Used
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- React.js
+- Next.js
+- Tailwind CSS
+- FBI Wanted API
 
-## Learn More
+## Installation
 
-To learn more about Next.js, take a look at the following resources:
+1. Clone the repository:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   ```
+   git clone https://github.com/your-username/fbi-wanted-viewer.git
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Navigate to the project directory:
 
-## Deploy on Vercel
+   ```
+   cd fbi-wanted-viewer
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+3. Install dependencies:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+   ```
+   npm install
+   ```
+
+4. Start the development server:
+
+   ```
+   npm run dev
+   ```
+
+5. Open your browser and visit `http://localhost:3000`
+
+## Usage
+
+- Browse through the list of wanted persons on the main page
+- Use the search bar at the top of the page to filter wanted persons by name
+- Click on a wanted person's card to view more detailed information
+- Use the pagination buttons at the bottom of the page to navigate through the list
+
+## API
+
+This application uses the FBI Wanted API to fetch data. You can find more information about the API at [https://api.fbi.gov/docs](https://api.fbi.gov/docs)
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
