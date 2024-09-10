@@ -30,7 +30,7 @@ The FBI Wanted Persons Viewer is a web application that displays information abo
 2. Navigate to the project directory:
 
    ```
-   cd fbi-wanted-viewer
+   cd fbi-wanted-list
    ```
 
 3. Install dependencies:
