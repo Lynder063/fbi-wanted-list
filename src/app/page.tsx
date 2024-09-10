@@ -80,39 +80,6 @@ export default function Component() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2">
-                <FilterIcon className="w-4 h-4" />
-                Filter
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-48 p-2">
-              <DropdownMenuLabel>Filter by:</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Checkbox /> Crime Type
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Checkbox /> Age
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Checkbox /> Race
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Checkbox /> Height
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Checkbox /> Weight
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Checkbox /> Date of Birth
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Checkbox /> Date of Publication
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </header>
       <main className="flex-1 bg-background p-6">
