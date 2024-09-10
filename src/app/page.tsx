@@ -1,101 +1,189 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect, useMemo } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 
-export default function Home() {
+export default function Component() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [wanted, setWanted] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const fetchPersons = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `https://api.fbi.gov/wanted/v1/list?page=${currentPage}`
+        );
+        const data = await response.json();
+        console.log(data);
+        setWanted(data.items || []);
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPersons();
+  }, [currentPage]);
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const filteredWanted = useMemo(() => {
+    return wanted.filter((person) =>
+      person.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [wanted, searchQuery]);
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+    <div className="flex flex-col min-h-screen">
+      <header className="bg-primary text-primary-foreground py-4 px-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold">FBI Wanted</h1>
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search wanted persons..."
+              className="bg-primary-foreground/10 text-primary-foreground pl-10 pr-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-foreground focus:ring-offset-2 focus:ring-offset-primary"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
         </div>
+      </header>
+      <main className="flex-1 bg-background p-6">
+        {isLoading ? (
+          <div className="text-white flex justify-center items-center h-full">
+            Loading...
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {filteredWanted.map((person) => (
+              <Card
+                key={person.uuid}
+                className="bg-card text-card-foreground rounded-lg overflow-hidden shadow-md"
+              >
+                <Link href={person.url}>
+                  <img
+                    src={person.images[0].original}
+                    alt={`Wanted Person - ${person.title}`}
+                    width={500}
+                    height={500}
+                    className="w-full h-80 object-cover"
+                    loading="lazy"
+                    style={{ aspectRatio: "500/500", objectFit: "cover" }}
+                  />
+                  <CardContent className="p-4 grid gap-2">
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-xl font-bold">{person.title}</h2>
+                      <div className="bg-red-700 text-primary-foreground px-2 py-1 rounded-full text-base font-medium">
+                        Wanted
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-lg text-muted-foreground">
+                      <div>
+                        <span className="font-semibold">Age:</span>{" "}
+                        {person.age_range ? person.age_range : "Undefined"}
+                      </div>
+                      <div>
+                        <span className="font-semibold">Race:</span>{" "}
+                        {person.race_raw ? person.race_raw : "Undefined"}
+                      </div>
+                      <div>
+                        <span className="font-semibold">Height:</span>{" "}
+                        {person.height ? person.height : "Undefined"}
+                      </div>
+                      <div>
+                        <span className="font-semibold">Weight:</span>{" "}
+                        {person.weight ? person.weight : "Undefined"}
+                      </div>
+                      <div>
+                        <span className="font-semibold">Birth:</span>{" "}
+                        {person.dates_of_birth_used
+                          ? person.dates_of_birth_used
+                          : "Undefined"}
+                      </div>
+                      <div>
+                        <span className="font-semibold">Published:</span>{" "}
+                        {new Intl.DateTimeFormat("cs-CZ").format(
+                          new Date(person.publication)
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-2xl">
+                      <span className="font-semibold">Crime:</span>{" "}
+                      {person.poster_classification
+                        ? person.poster_classification
+                        : "Undefined"}
+                    </div>
+                  </CardContent>
+                </Link>
+              </Card>
+            ))}
+          </div>
+        )}
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      <footer className="bg-muted text-muted-foreground p-4 text-sm flex justify-center items-center gap-4">
+        {Array.from(
+          { length: Math.ceil((filteredWanted?.length || 0) / 4) },
+          (_, i) => i + 1
+        ).map((page) => (
+          <Button
+            key={page}
+            variant={currentPage === page ? "primary" : "outline"}
+            onClick={() => handlePageChange(page)}
+            className="px-4 py-2 rounded-md"
+          >
+            {page}
+          </Button>
+        ))}
       </footer>
     </div>
+  );
+}
+
+function FilterIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+    </svg>
+  );
+}
+
+function SearchIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
   );
 }
