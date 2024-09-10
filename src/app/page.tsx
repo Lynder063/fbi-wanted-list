@@ -1,13 +1,37 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 
+// Definujeme typ pro hledanou osobu
+interface WantedPerson {
+  uuid: string;
+  title: string;
+  images: { original: string }[];
+  url: string;
+  age_range?: string;
+  race_raw?: string;
+  height?: string;
+  weight?: string;
+  dates_of_birth_used?: string[];
+  publication: string;
+  poster_classification?: string;
+}
+
 export default function Component() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [wanted, setWanted] = useState([]);
+  const [wanted, setWanted] = useState<WantedPerson[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -30,7 +54,7 @@ export default function Component() {
     fetchPersons();
   }, [currentPage]);
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -56,6 +80,39 @@ export default function Component() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-2">
+                <FilterIcon className="w-4 h-4" />
+                Filter
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-48 p-2">
+              <DropdownMenuLabel>Filter by:</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Checkbox /> Crime Type
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Checkbox /> Age
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Checkbox /> Race
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Checkbox /> Height
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Checkbox /> Weight
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Checkbox /> Date of Birth
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Checkbox /> Date of Publication
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
       <main className="flex-1 bg-background p-6">
@@ -72,7 +129,7 @@ export default function Component() {
               >
                 <Link href={person.url}>
                   <img
-                    src={person.images[0].original}
+                    src={person.images[0]?.original}
                     alt={`Wanted Person - ${person.title}`}
                     width={500}
                     height={500}
@@ -90,25 +147,23 @@ export default function Component() {
                     <div className="grid grid-cols-2 gap-2 text-lg text-muted-foreground">
                       <div>
                         <span className="font-semibold">Age:</span>{" "}
-                        {person.age_range ? person.age_range : "Undefined"}
+                        {person.age_range || "Undefined"}
                       </div>
                       <div>
                         <span className="font-semibold">Race:</span>{" "}
-                        {person.race_raw ? person.race_raw : "Undefined"}
+                        {person.race_raw || "Undefined"}
                       </div>
                       <div>
                         <span className="font-semibold">Height:</span>{" "}
-                        {person.height ? person.height : "Undefined"}
+                        {person.height || "Undefined"}
                       </div>
                       <div>
                         <span className="font-semibold">Weight:</span>{" "}
-                        {person.weight ? person.weight : "Undefined"}
+                        {person.weight || "Undefined"}
                       </div>
                       <div>
                         <span className="font-semibold">Birth:</span>{" "}
-                        {person.dates_of_birth_used
-                          ? person.dates_of_birth_used
-                          : "Undefined"}
+                        {person.dates_of_birth_used?.[0] || "Undefined"}
                       </div>
                       <div>
                         <span className="font-semibold">Published:</span>{" "}
@@ -119,9 +174,7 @@ export default function Component() {
                     </div>
                     <div className="text-2xl">
                       <span className="font-semibold">Crime:</span>{" "}
-                      {person.poster_classification
-                        ? person.poster_classification
-                        : "Undefined"}
+                      {person.poster_classification || "Undefined"}
                     </div>
                   </CardContent>
                 </Link>
@@ -137,7 +190,7 @@ export default function Component() {
         ).map((page) => (
           <Button
             key={page}
-            variant={currentPage === page ? "primary" : "outline"}
+            variant={currentPage === page ? "default" : "outline"}
             onClick={() => handlePageChange(page)}
             className="px-4 py-2 rounded-md"
           >
@@ -149,7 +202,11 @@ export default function Component() {
   );
 }
 
-function FilterIcon(props) {
+interface IconProps extends React.SVGProps<SVGSVGElement> {
+  // Můžete přidat další vlastnosti, pokud je potřebujete
+}
+
+function FilterIcon(props: IconProps) {
   return (
     <svg
       {...props}
@@ -168,7 +225,7 @@ function FilterIcon(props) {
   );
 }
 
-function SearchIcon(props) {
+function SearchIcon(props: IconProps) {
   return (
     <svg
       {...props}
