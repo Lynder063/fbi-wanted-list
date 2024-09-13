@@ -1,8 +1,8 @@
-# FBI Wanted Persons Viewer
+# FBI Wanted List
 
 ## Overview
 
-The FBI Wanted Persons Viewer is a web application that displays information about individuals currently on the FBI's wanted list. This application provides an interactive interface for users to browse through wanted persons, search for specific individuals, and view detailed information about each person.
+The FBI Wanted List is a web application that displays information about individuals currently on the FBI's wanted list. This application provides an interactive interface for users to browse through wanted persons, search for specific individuals, and view detailed information about each person.
 
 ## Features
 

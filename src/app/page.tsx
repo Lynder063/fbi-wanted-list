@@ -1,20 +1,10 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 
-// Definujeme typ pro hledanou osobu
 interface WantedPerson {
   uuid: string;
   title: string;
@@ -114,23 +104,23 @@ export default function Component() {
                     <div className="grid grid-cols-2 gap-2 text-lg text-muted-foreground">
                       <div>
                         <span className="font-semibold">Age:</span>{" "}
-                        {person.age_range || "Undefined"}
+                        {person.age_range || "Not defined"}
                       </div>
                       <div>
                         <span className="font-semibold">Race:</span>{" "}
-                        {person.race_raw || "Undefined"}
+                        {person.race_raw || "Not defined"}
                       </div>
                       <div>
                         <span className="font-semibold">Height:</span>{" "}
-                        {person.height || "Undefined"}
+                        {person.height || "Not defined"}
                       </div>
                       <div>
                         <span className="font-semibold">Weight:</span>{" "}
-                        {person.weight || "Undefined"}
+                        {person.weight || "Not defined"}
                       </div>
                       <div>
                         <span className="font-semibold">Birth:</span>{" "}
-                        {person.dates_of_birth_used?.[0] || "Undefined"}
+                        {person.dates_of_birth_used?.[0] || "Not defined"}
                       </div>
                       <div>
                         <span className="font-semibold">Published:</span>{" "}
@@ -141,7 +131,7 @@ export default function Component() {
                     </div>
                     <div className="text-2xl">
                       <span className="font-semibold">Crime:</span>{" "}
-                      {person.poster_classification || "Undefined"}
+                      {person.poster_classification || "Not defined"}
                     </div>
                   </CardContent>
                 </Link>
