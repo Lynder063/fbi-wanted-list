@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
+import Image from "next/image";
 
 interface WantedPerson {
   uuid: string;
@@ -85,7 +86,7 @@ export default function Component() {
                 className="bg-card text-card-foreground rounded-lg overflow-hidden shadow-md"
               >
                 <Link href={person.url}>
-                  <img
+                  <Image
                     src={person.images[0]?.original}
                     alt={`Wanted Person - ${person.title}`}
                     width={500}
